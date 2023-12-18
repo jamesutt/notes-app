@@ -5,6 +5,7 @@ import {HomeScreen} from './screens/home';
 import {LoginScreen} from './screens/login';
 import {isLoggedInSelector, useAuthStore} from './utils/auth';
 import {QueryClient, QueryClientProvider} from 'react-query';
+import './global.css';
 
 const queryClient = new QueryClient();
 const Stack = createNativeStackNavigator();
@@ -26,7 +27,11 @@ export const App = () => {
             </>
           ) : (
             <>
-              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen
+                name="Login"
+                component={LoginScreen}
+                options={{headerShown: false}}
+              />
             </>
           )}
         </Stack.Navigator>
