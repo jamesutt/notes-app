@@ -1,6 +1,6 @@
 import {axios} from './axios';
 
-type Note = {
+export type Note = {
   userId: number;
   id: number;
   title: string;

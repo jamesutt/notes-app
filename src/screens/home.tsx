@@ -1,46 +1,51 @@
 import React from 'react';
-import {FlatList, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  SafeAreaView,
+  Text,
+  View,
+} from 'react-native';
 import {useQuery} from 'react-query';
-import {fetchNotes} from '../utils/notes';
+import {Note, fetchNotes} from '../utils/notes';
 
 export const HomeScreen = () => {
   const {isLoading, data = []} = useQuery('notes', fetchNotes);
 
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
-
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={data}
-        renderItem={({item}) => <Item title={item.title} />}
-        keyExtractor={item => `${item.id}`}
-      />
+    <SafeAreaView className="flex-1 bg-white">
+      {isLoading ? (
+        <View className="flex flex-1 items-center justify-center">
+          <ActivityIndicator />
+        </View>
+      ) : (
+        <View className="py-2">
+          <FlatList
+            data={data}
+            keyExtractor={item => `${item.id}`}
+            ItemSeparatorComponent={Divider}
+            className="h-full"
+            renderItem={({item}) => <Item {...item} />}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
 
-type ItemProps = {title: string};
-
-const Item = ({title}: ItemProps) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
+const Item = ({title, body}: Note) => (
+  <View className="py-2 px-4">
+    <Text numberOfLines={1} className="text-xl font-semibold text-gray-900">
+      {title}
+    </Text>
+    <Text numberOfLines={1} className="mt-1 text-lg text-gray-500">
+      {body}
+    </Text>
   </View>
 );
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-  },
-});
+const Divider = () => (
+  <View className="px-4">
+    <View className="w-full bg-gray-300 h-[1px]" />
+  </View>
+);
