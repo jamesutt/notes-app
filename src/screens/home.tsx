@@ -13,11 +13,13 @@ import {Note, fetchNotes} from '../utils/notes';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {StackParamList} from '../app';
 import {useNavigation} from '@react-navigation/native';
+import {useRefreshOnFocus} from '../hooks/use-refresh-on-focus';
 
 type Props = NativeStackScreenProps<StackParamList, 'Home'>;
 
 export const HomeScreen = (_props: Props) => {
-  const {isLoading, data = []} = useQuery('notes', fetchNotes);
+  const {isLoading, data = [], refetch} = useQuery('notes', fetchNotes);
+  useRefreshOnFocus(refetch);
 
   return (
     <SafeAreaView className="flex-1 bg-white">

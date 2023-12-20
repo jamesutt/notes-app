@@ -13,6 +13,8 @@ import {Note} from './utils/notes';
 import {NoteScreen} from './screens/note';
 import {Button} from './components/button';
 import {NewNoteScreen} from './screens/new-note';
+import {Comment} from './utils/comments';
+import {CommentScreen} from './screens/comment';
 
 declare global {
   namespace ReactNavigation {
@@ -27,6 +29,9 @@ export type StackParamList = {
     note: Note;
   };
   NewNote: undefined;
+  Comment: {
+    comment: Comment;
+  };
 };
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -60,6 +65,7 @@ export const App = () => {
                 component={NewNoteScreen}
                 options={{headerTitle: 'New Note', presentation: 'modal'}}
               />
+              <Stack.Screen name="Comment" component={CommentScreen} />
             </>
           ) : (
             <>

@@ -6,10 +6,11 @@ type ButtonProps = {
   text?: React.ReactNode;
   onPress?: () => void;
   className?: string;
+  textClassName?: string;
 };
 
 export const Button = (props: ButtonProps) => {
-  const {onPress, text, className} = props;
+  const {onPress, text, className, textClassName} = props;
 
   return (
     <Pressable
@@ -19,7 +20,9 @@ export const Button = (props: ButtonProps) => {
         'px-2',
         className,
       )}>
-      <Text className="text-xl text-sky-500 font-medium">{text}</Text>
+      <Text className={cn('text-xl text-sky-500 font-medium', textClassName)}>
+        {text}
+      </Text>
     </Pressable>
   );
 };
