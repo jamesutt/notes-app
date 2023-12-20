@@ -2,6 +2,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect} from 'react';
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   Pressable,
   SafeAreaView,
@@ -13,7 +14,7 @@ import {
 } from 'react-native';
 import {StackParamList} from '../app';
 import {SceneRendererProps, TabView} from 'react-native-tab-view';
-import {Note} from '../utils/notes';
+import {Note, deleteNote} from '../utils/notes';
 import {useQuery} from 'react-query';
 import {Comment, fetchComments} from '../utils/comments';
 import {useNavigation} from '@react-navigation/native';
@@ -62,7 +63,32 @@ export const NoteScreen = (props: Props) => {
     navigation.setOptions({
       headerRight:
         index === 0
-          ? () => <Button text="Delete" />
+          ? () => (
+              <Button
+                text="Delete"
+                textClassName="text-red-500"
+                onPress={() => {
+                  Alert.alert(
+                    'Are you sure you want to delete this note?',
+                    undefined,
+                    [
+                      {
+                        text: 'Cancel',
+                        style: 'cancel',
+                      },
+                      {
+                        text: 'Delete',
+                        onPress: async () => {
+                          await deleteNote(note.id);
+                          navigation.goBack();
+                        },
+                        style: 'destructive',
+                      },
+                    ],
+                  );
+                }}
+              />
+            )
           : () => (
               <Button
                 text="Add Comment"
