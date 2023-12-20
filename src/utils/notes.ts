@@ -9,5 +9,12 @@ export type Note = {
 
 export const fetchNotes = async () => {
   const res = await axios.get('/notes');
-  return res.data as Note[];
+  const notes = res.data as Note[];
+
+  return notes.sort((a, b) => b.id - a.id);
+};
+
+export const addNote = async (note: Pick<Note, 'title' | 'body'>) => {
+  const res = await axios.post('/notes', note);
+  return res.data as Note;
 };

@@ -2,14 +2,21 @@ import React from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  Pressable,
   SafeAreaView,
+  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import {useQuery} from 'react-query';
 import {Note, fetchNotes} from '../utils/notes';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {StackParamList} from '../app';
+import {useNavigation} from '@react-navigation/native';
 
-export const HomeScreen = () => {
+type Props = NativeStackScreenProps<StackParamList, 'Home'>;
+
+export const HomeScreen = (_props: Props) => {
   const {isLoading, data = []} = useQuery('notes', fetchNotes);
 
   return (
@@ -19,30 +26,43 @@ export const HomeScreen = () => {
           <ActivityIndicator />
         </View>
       ) : (
-        <View className="py-2">
-          <FlatList
-            data={data}
-            keyExtractor={item => `${item.id}`}
-            ItemSeparatorComponent={Divider}
-            className="h-full"
-            renderItem={({item}) => <Item {...item} />}
-          />
-        </View>
+        <FlatList
+          data={data}
+          keyExtractor={item => `${item.id}`}
+          ItemSeparatorComponent={Divider}
+          style={styles.list}
+          renderItem={({item}) => <Item {...item} />}
+        />
       )}
     </SafeAreaView>
   );
 };
 
-const Item = ({title, body}: Note) => (
-  <View className="py-2 px-4">
-    <Text numberOfLines={1} className="text-xl font-semibold text-gray-900">
-      {title}
-    </Text>
-    <Text numberOfLines={1} className="mt-1 text-lg text-gray-500">
-      {body}
-    </Text>
-  </View>
-);
+const styles = StyleSheet.create({
+  list: {
+    height: '100%',
+  },
+});
+
+const Item = (note: Note) => {
+  const {title, body} = note;
+  const navigation = useNavigation();
+
+  return (
+    <Pressable
+      className="py-3 px-4 active:bg-gray-200"
+      onPress={() => {
+        navigation.navigate('Note', {note});
+      }}>
+      <Text numberOfLines={1} className="text-xl font-semibold text-gray-900">
+        {title}
+      </Text>
+      <Text numberOfLines={1} className="mt-1 text-lg text-gray-500">
+        {body}
+      </Text>
+    </Pressable>
+  );
+};
 
 const Divider = () => (
   <View className="px-4">

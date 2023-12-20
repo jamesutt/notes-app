@@ -15,10 +15,11 @@ export const Button = (props: ButtonProps) => {
     <Pressable
       onPress={onPress}
       className={cn(
-        'rounded-lg bg-teal-600 px-5 py-3 shadow-sm active:bg-teal-500',
+        // 'rounded-lg bg-slate-600 px-3.5 py-2.5 shadow-sm active:bg-slate-500',
+        'px-2',
         className,
       )}>
-      <Text className="text-xl text-white font-semibold">{text}</Text>
+      <Text className="text-xl text-sky-500 font-medium">{text}</Text>
     </Pressable>
   );
 };
