@@ -1,6 +1,7 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -19,6 +20,30 @@ export const NewNoteScreen = (props: Props) => {
 
   useEffect(() => {
     navigation.setOptions({
+      headerLeft: () => (
+        <Button
+          text="Cancel"
+          onPress={() => {
+            if (title.length > 0 || body.length > 0) {
+              Alert.alert('Go back?', 'Your unsaved changes will be lost.', [
+                {
+                  text: 'Keep Editing',
+                  style: 'cancel',
+                },
+                {
+                  text: 'Discard Changes',
+                  onPress: () => {
+                    navigation.goBack();
+                  },
+                  style: 'destructive',
+                },
+              ]);
+            } else {
+              navigation.goBack();
+            }
+          }}
+        />
+      ),
       headerRight: () => (
         <Button
           text="Save"

@@ -67,13 +67,21 @@ export const App = () => {
               <Stack.Screen
                 name="NewNote"
                 component={NewNoteScreen}
-                options={{headerTitle: 'New Note', presentation: 'modal'}}
+                options={{
+                  headerTitle: 'New Note',
+                  presentation: 'modal',
+                  gestureEnabled: false,
+                }}
               />
               <Stack.Screen name="Comment" component={CommentScreen} />
               <Stack.Screen
                 name="NewComment"
                 component={NewCommentScreen}
-                options={{headerTitle: 'New Comment', presentation: 'modal'}}
+                options={{
+                  headerTitle: 'New Comment',
+                  presentation: 'modal',
+                  gestureEnabled: false,
+                }}
               />
             </>
           ) : (
