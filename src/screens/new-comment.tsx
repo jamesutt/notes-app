@@ -8,13 +8,13 @@ import {
 } from 'react-native';
 import {StackParamList} from '../app';
 import {Button} from '../components/button';
-import {addNote} from '../utils/notes';
+import {addComment} from '../utils/comments';
 
-type Props = NativeStackScreenProps<StackParamList, 'NewNote'>;
+type Props = NativeStackScreenProps<StackParamList, 'NewComment'>;
 
-export const NewNoteScreen = (props: Props) => {
+export const NewCommentScreen = (props: Props) => {
   const {navigation} = props;
-  const [title, setTitle] = useState('');
+  const {noteId} = props.route.params;
   const [body, setBody] = useState('');
 
   useEffect(() => {
@@ -23,18 +23,18 @@ export const NewNoteScreen = (props: Props) => {
         <Button
           text="Save"
           onPress={async () => {
-            if (title.length === 0 || body.length === 0) {
+            if (body.length === 0) {
               return;
             }
 
-            await addNote({title, body});
+            await addComment({body, noteId});
 
             navigation.goBack();
           }}
         />
       ),
     });
-  }, [body, navigation, title]);
+  }, [body, navigation, noteId]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -43,17 +43,10 @@ export const NewNoteScreen = (props: Props) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={120}>
         <TextInput
-          value={title}
-          onChangeText={setTitle}
-          multiline
-          className="text-xl font-semibold text-gray-900 px-4 my-2"
-          placeholder="Title"
-        />
-        <TextInput
           value={body}
           onChangeText={setBody}
           multiline
-          className="text-lg text-gray-900 px-4 flex-1"
+          className="text-xl text-gray-900 px-4 my-2"
           placeholder="Body"
         />
       </KeyboardAvoidingView>

@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -18,10 +18,12 @@ import {useQuery} from 'react-query';
 import {Comment, fetchComments} from '../utils/comments';
 import {useNavigation} from '@react-navigation/native';
 import {useRefreshOnFocus} from '../hooks/use-refresh-on-focus';
+import {Button} from '../components/button';
 
 type Props = NativeStackScreenProps<StackParamList, 'Note'>;
 
 export const NoteScreen = (props: Props) => {
+  const {navigation} = props;
   const {note} = props.route.params;
   const {
     isLoading,
@@ -55,6 +57,22 @@ export const NoteScreen = (props: Props) => {
         return null;
     }
   };
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight:
+        index === 0
+          ? () => <Button text="Delete" />
+          : () => (
+              <Button
+                text="Add Comment"
+                onPress={() =>
+                  navigation.navigate('NewComment', {noteId: note.id})
+                }
+              />
+            ),
+    });
+  }, [index, navigation, note.id]);
 
   return (
     <TabView

@@ -18,6 +18,11 @@ export const fetchComments = async (noteId: number) => {
   return comments.sort((a, b) => b.id - a.id);
 };
 
+export const addComment = async (comment: Pick<Comment, 'noteId' | 'body'>) => {
+  const res = await axios.post('/comments', comment);
+  return res.data as Comment;
+};
+
 export const deleteComment = async (commentId: number) => {
   return await axios.delete(`/comments/${commentId}`);
 };
