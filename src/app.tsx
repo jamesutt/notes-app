@@ -48,7 +48,13 @@ export const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator
+          screenOptions={{
+            headerTintColor: '#0ea5e9',
+            headerTitleStyle: {
+              color: '#0f172a',
+            },
+          }}>
           {isLoggedIn ? (
             <>
               <Stack.Screen
@@ -62,7 +68,7 @@ export const App = () => {
               <Stack.Screen
                 name="Note"
                 component={NoteScreen}
-                options={{headerTitle: 'View Note'}}
+                options={{headerTitle: '', headerShadowVisible: false}}
               />
               <Stack.Screen
                 name="NewNote"

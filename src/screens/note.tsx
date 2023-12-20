@@ -13,7 +13,12 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {StackParamList} from '../app';
-import {SceneRendererProps, TabView} from 'react-native-tab-view';
+import {
+  NavigationState,
+  SceneRendererProps,
+  TabBar,
+  TabView,
+} from 'react-native-tab-view';
 import {Note, deleteNote} from '../utils/notes';
 import {useQuery} from 'react-query';
 import {Comment, fetchComments} from '../utils/comments';
@@ -100,10 +105,29 @@ export const NoteScreen = (props: Props) => {
     });
   }, [index, navigation, note.id]);
 
+  const renderTabBar = (
+    tabBarProps: SceneRendererProps & {
+      navigationState: NavigationState<{
+        key: string;
+        title: string;
+      }>;
+    },
+  ) => (
+    <TabBar
+      {...tabBarProps}
+      renderLabel={({route}) => (
+        <Text className="text-lg text-gray-900 font-bold">{route.title}</Text>
+      )}
+      indicatorStyle={styles.tabBarIndicator}
+      style={styles.tabBar}
+    />
+  );
+
   return (
     <TabView
       navigationState={{index, routes}}
       renderScene={renderScene}
+      renderTabBar={renderTabBar}
       onIndexChange={setIndex}
       initialLayout={{width: layout.width}}
     />
@@ -152,6 +176,14 @@ const CommentsTab = ({
 const styles = StyleSheet.create({
   list: {
     height: '100%',
+  },
+  tabBar: {
+    backgroundColor: 'white',
+    borderBottomColor: '#cbd5e1',
+    borderBottomWidth: 1,
+  },
+  tabBarIndicator: {
+    backgroundColor: '#0ea5e9',
   },
 });
 
