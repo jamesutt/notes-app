@@ -1,6 +1,6 @@
 ## Setup
 
-1. Duplicate the `.env.example` and rename it to `.env`
+1. Duplicate the `.env.example` file and rename it to `.env`
 2. Fill in all the environment variables in the `.env` file
 3. Install the dependencies by running the following commands
 
