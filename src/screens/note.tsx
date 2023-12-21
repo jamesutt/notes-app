@@ -68,41 +68,39 @@ export const NoteScreen = (props: Props) => {
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight:
-        index === 0
-          ? () => (
-              <Button
-                onPress={() => {
-                  Alert.alert(
-                    'Are you sure you want to delete this note?',
-                    undefined,
-                    [
-                      {
-                        text: 'Cancel',
-                        style: 'cancel',
-                      },
-                      {
-                        text: 'Delete',
-                        onPress: async () => {
-                          await deleteNote(note.id);
-                          navigation.goBack();
-                        },
-                        style: 'destructive',
-                      },
-                    ],
-                  );
-                }}>
-                <TrashIcon className="text-rose-500" />
-              </Button>
-            )
-          : () => (
-              <Button
-                onPress={() =>
-                  navigation.navigate('NewComment', {noteId: note.id})
-                }>
-                <BubbleIcon />
-              </Button>
-            ),
+      headerRight: () =>
+        index === 0 ? (
+          <Button
+            onPress={() => {
+              Alert.alert(
+                'Delete this note?',
+                'Your note will be permanently deleted',
+                [
+                  {
+                    text: 'Cancel',
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Delete',
+                    onPress: async () => {
+                      await deleteNote(note.id);
+                      navigation.goBack();
+                    },
+                    style: 'destructive',
+                  },
+                ],
+              );
+            }}>
+            <TrashIcon className="text-rose-500" />
+          </Button>
+        ) : (
+          <Button
+            onPress={() =>
+              navigation.navigate('NewComment', {noteId: note.id})
+            }>
+            <BubbleIcon />
+          </Button>
+        ),
     });
   }, [index, navigation, note.id]);
 

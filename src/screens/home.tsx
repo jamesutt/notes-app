@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -14,12 +14,31 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {StackParamList} from '../app';
 import {useNavigation} from '@react-navigation/native';
 import {useRefreshOnFocus} from '../hooks/use-refresh-on-focus';
+import PlusIcon from '../components/icons/plus';
+import {Button} from '../components/button';
+import UserIcon from '../components/icons/user';
 
 type Props = NativeStackScreenProps<StackParamList, 'Home'>;
 
-export const HomeScreen = (_props: Props) => {
+export const HomeScreen = (props: Props) => {
+  const {navigation} = props;
   const {isLoading, data = [], refetch} = useQuery('notes', fetchNotes);
   useRefreshOnFocus(refetch);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <Button onPress={() => navigation.navigate('Profile')}>
+          <UserIcon className="text-sky-500" />
+        </Button>
+      ),
+      headerRight: () => (
+        <Button onPress={() => navigation.navigate('NewNote')}>
+          <PlusIcon className="text-sky-500" />
+        </Button>
+      ),
+    });
+  }, [navigation]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">

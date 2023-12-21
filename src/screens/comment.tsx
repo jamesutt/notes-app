@@ -18,8 +18,8 @@ export const CommentScreen = (props: Props) => {
         <Button
           onPress={() => {
             Alert.alert(
-              'Are you sure you want to delete this comment?',
-              undefined,
+              'Delete this comment?',
+              'Your comment will be permanently deleted',
               [
                 {
                   text: 'Cancel',
