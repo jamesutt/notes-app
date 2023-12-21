@@ -1,7 +1,10 @@
 import {
   AuthConfiguration,
   AuthorizeResult,
+  RefreshResult,
   authorize,
+  logout,
+  refresh,
 } from 'react-native-app-auth';
 import {AUTH_ISSUER, AUTH_CLIENT_ID} from 'react-native-dotenv';
 import {createStore} from 'zustand/vanilla';
@@ -15,9 +18,10 @@ const config: AuthConfiguration = {
 };
 
 type AuthStore = {
-  authResult: AuthorizeResult | null;
+  authResult: AuthorizeResult | RefreshResult | null;
   login: () => Promise<boolean>;
   logout: () => Promise<boolean>;
+  refresh: () => Promise<void>;
 };
 
 export const authStore = createStore<AuthStore>()((set, get) => ({
@@ -35,7 +39,38 @@ export const authStore = createStore<AuthStore>()((set, get) => ({
     }
     return false;
   },
+  refresh: async () => {
+    const authResult = get().authResult;
+    if (!authResult?.refreshToken) {
+      throw new Error('Refresh token not found');
+    }
+    const refreshResult = await refresh(config, {
+      refreshToken: authResult.refreshToken,
+    });
+
+    if (refreshResult) {
+      console.log('refreshResult', refreshResult);
+      set({
+        authResult: {
+          ...authResult,
+          ...refreshResult,
+        },
+      });
+    }
+  },
   logout: async () => {
+    try {
+      const authResult = get().authResult;
+      if (authResult?.idToken) {
+        await logout(config, {
+          idToken: authResult.idToken,
+          postLogoutRedirectUrl: '',
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    set({authResult: null});
     return true;
   },
 }));

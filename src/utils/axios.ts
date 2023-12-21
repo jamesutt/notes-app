@@ -14,4 +14,25 @@ axiosInstance.interceptors.request.use(config => {
   return config;
 });
 
+axiosInstance.interceptors.response.use(
+  response => response,
+  async err => {
+    const request = err.config;
+
+    if (err.response.status === 401 && !request._retry) {
+      request._retry = true;
+
+      try {
+        await authStore.getState().refresh();
+        return axiosInstance(request);
+      } catch (e) {
+        await authStore.getState().logout();
+        return Promise.reject(e);
+      }
+    }
+
+    return Promise.reject(err);
+  },
+);
+
 export {axiosInstance as axios};
