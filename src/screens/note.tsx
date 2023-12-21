@@ -25,6 +25,8 @@ import {Comment, fetchComments} from '../utils/comments';
 import {useNavigation} from '@react-navigation/native';
 import {useRefreshOnFocus} from '../hooks/use-refresh-on-focus';
 import {Button} from '../components/button';
+import TrashIcon from '../components/icons/trash';
+import BubbleIcon from '../components/icons/bubble';
 
 type Props = NativeStackScreenProps<StackParamList, 'Note'>;
 
@@ -70,8 +72,6 @@ export const NoteScreen = (props: Props) => {
         index === 0
           ? () => (
               <Button
-                text="Delete"
-                textClassName="text-red-500"
                 onPress={() => {
                   Alert.alert(
                     'Are you sure you want to delete this note?',
@@ -91,16 +91,17 @@ export const NoteScreen = (props: Props) => {
                       },
                     ],
                   );
-                }}
-              />
+                }}>
+                <TrashIcon className="text-rose-500" />
+              </Button>
             )
           : () => (
               <Button
-                text="Add Comment"
                 onPress={() =>
                   navigation.navigate('NewComment', {noteId: note.id})
-                }
-              />
+                }>
+                <BubbleIcon />
+              </Button>
             ),
     });
   }, [index, navigation, note.id]);

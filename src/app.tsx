@@ -16,6 +16,7 @@ import {NewNoteScreen} from './screens/new-note';
 import {Comment} from './utils/comments';
 import {CommentScreen} from './screens/comment';
 import {NewCommentScreen} from './screens/new-comment';
+import PlusIcon from './components/icons/plus';
 
 declare global {
   namespace ReactNavigation {
@@ -108,5 +109,9 @@ export const App = () => {
 const NewNoteButton =
   (navigation: NativeStackScreenProps<StackParamList, 'Home'>['navigation']) =>
   () => {
-    return <Button onPress={() => navigation.navigate('NewNote')} text="New" />;
+    return (
+      <Button onPress={() => navigation.navigate('NewNote')}>
+        <PlusIcon className="text-sky-500" />
+      </Button>
+    );
   };

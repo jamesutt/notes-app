@@ -4,6 +4,7 @@ import {StackParamList} from '../app';
 import {View, ScrollView, Text, Alert} from 'react-native';
 import {Button} from '../components/button';
 import {deleteComment} from '../utils/comments';
+import TrashIcon from '../components/icons/trash';
 
 type Props = NativeStackScreenProps<StackParamList, 'Comment'>;
 
@@ -15,8 +16,6 @@ export const CommentScreen = (props: Props) => {
     navigation.setOptions({
       headerRight: () => (
         <Button
-          text="Delete"
-          textClassName="text-red-500"
           onPress={() => {
             Alert.alert(
               'Are you sure you want to delete this comment?',
@@ -37,8 +36,9 @@ export const CommentScreen = (props: Props) => {
                 },
               ],
             );
-          }}
-        />
+          }}>
+          <TrashIcon className="text-rose-500" />
+        </Button>
       ),
     });
   }, [comment.id, navigation]);

@@ -8,7 +8,7 @@ import {
   TextInput,
 } from 'react-native';
 import {StackParamList} from '../app';
-import {Button} from '../components/button';
+import {Button, ButtonText} from '../components/button';
 import {addComment} from '../utils/comments';
 
 type Props = NativeStackScreenProps<StackParamList, 'NewComment'>;
@@ -22,7 +22,6 @@ export const NewCommentScreen = (props: Props) => {
     navigation.setOptions({
       headerLeft: () => (
         <Button
-          text="Cancel"
           onPress={() => {
             if (body.length > 0) {
               Alert.alert('Go back?', 'Your unsaved changes will be lost.', [
@@ -41,22 +40,32 @@ export const NewCommentScreen = (props: Props) => {
             } else {
               navigation.goBack();
             }
-          }}
-        />
+          }}>
+          <ButtonText>Cancel</ButtonText>
+        </Button>
       ),
       headerRight: () => (
         <Button
-          text="Save"
           onPress={async () => {
             if (body.length === 0) {
+              Alert.alert(
+                'Missing Information',
+                'Please fill in both the title and body fields.',
+                [
+                  {
+                    text: 'OK',
+                  },
+                ],
+              );
               return;
             }
 
             await addComment({body, noteId});
 
             navigation.goBack();
-          }}
-        />
+          }}>
+          <ButtonText>Save</ButtonText>
+        </Button>
       ),
     });
   }, [body, navigation, noteId]);
