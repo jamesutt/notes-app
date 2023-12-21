@@ -3,12 +3,18 @@ import {
   AuthorizeResult,
   RefreshResult,
   authorize,
-  logout,
   refresh,
 } from 'react-native-app-auth';
 import {AUTH_ISSUER, AUTH_CLIENT_ID} from 'react-native-dotenv';
 import {createStore} from 'zustand/vanilla';
 import {useStore} from 'zustand';
+import {storage} from './mmkv';
+import {jsonParse} from './misc';
+
+const AUTH_RESULT_KEY = 'auth';
+
+const jsonAuth = storage.getString(AUTH_RESULT_KEY);
+const initialAuthResult = jsonParse<AuthResult>(jsonAuth!, null);
 
 const config: AuthConfiguration = {
   issuer: AUTH_ISSUER,
@@ -17,21 +23,24 @@ const config: AuthConfiguration = {
   scopes: ['openid', 'profile', 'email', 'offline_access'],
 };
 
+type AuthResult = AuthorizeResult | RefreshResult | null;
+
 type AuthStore = {
-  authResult: AuthorizeResult | RefreshResult | null;
+  authResult: AuthResult;
   login: () => Promise<boolean>;
   logout: () => Promise<boolean>;
   refresh: () => Promise<void>;
 };
 
 export const authStore = createStore<AuthStore>()((set, get) => ({
-  authResult: null,
+  authResult: initialAuthResult,
   login: async () => {
     try {
       const authResult = await authorize(config);
       if (authResult) {
         console.log('authResult', authResult);
         set({authResult});
+        storage.set(AUTH_RESULT_KEY, JSON.stringify(authResult));
         return true;
       }
     } catch (e) {
@@ -50,27 +59,19 @@ export const authStore = createStore<AuthStore>()((set, get) => ({
 
     if (refreshResult) {
       console.log('refreshResult', refreshResult);
+      const newAuthResult = {
+        ...authResult,
+        ...refreshResult,
+      };
       set({
-        authResult: {
-          ...authResult,
-          ...refreshResult,
-        },
+        authResult: newAuthResult,
       });
+      storage.set(AUTH_RESULT_KEY, JSON.stringify(newAuthResult));
     }
   },
   logout: async () => {
-    try {
-      const authResult = get().authResult;
-      if (authResult?.idToken) {
-        await logout(config, {
-          idToken: authResult.idToken,
-          postLogoutRedirectUrl: '',
-        });
-      }
-    } catch (e) {
-      console.log(e);
-    }
     set({authResult: null});
+    storage.delete(AUTH_RESULT_KEY);
     return true;
   },
 }));
